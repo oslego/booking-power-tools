@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+
+  "name": "Booking.com Power Tools",
+  "description": "Augments Booking.com with tools for search, filter and display of results.",
+  "version": "1.0",
+
+  "content_scripts": [
+    {
+      "matches": ["*://localhost/*"],
+      "js": ["webcomponents-sd-ce.js", "contentscript.js"]
+    }
+  ]
+}
