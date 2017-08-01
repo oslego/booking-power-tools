@@ -13,12 +13,8 @@ class BPTPresets extends HTMLElement {
         box-sizing: border-box;
       }
 
-      .oprea {
-        color: blue;
-      }
-
       .presets {
-        outline: 1px solid red;
+        outline: 1px solid blue;
         padding: 7px;
       }
 
@@ -161,7 +157,7 @@ class BPTPresets extends HTMLElement {
     `;
 
     // Create a shadow root
-    var shadow = this.attachShadow({mode: 'closed'});
+    var shadow = this.attachShadow({mode: 'open'});
 
     const style = document.createRange().createContextualFragment(`<style>${css}</style>`);
     const doc = document.createRange().createContextualFragment(template);
@@ -204,3 +200,5 @@ class BPTPresets extends HTMLElement {
 
 // Define the new element
 customElements.define('bpt-presets', BPTPresets);
+
+export default BPTPresets;

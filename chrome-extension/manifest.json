@@ -4,7 +4,10 @@
   "name": "Booking.com Power Tools",
   "description": "Augments Booking.com with tools for search, filter and display of results.",
   "version": "1.0",
-
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
   "content_scripts": [
     {
       "matches": ["*://localhost/*"],
