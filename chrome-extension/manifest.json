@@ -10,8 +10,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://localhost/*"],
+      "matches": ["*://localhost/*", "*://www.booking.com/searchresults*"],
       "js": ["webcomponents-sd-ce.js", "contentscript.js"]
     }
+  ],
+  "permissions": [
+    "tabs",
+    "storage"
   ]
 }

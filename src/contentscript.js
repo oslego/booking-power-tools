@@ -1,7 +1,52 @@
-import BPTPresets from './components/presets.js'
+import BPTPresets from './components/presets.js';
+import Booking from './booking.js';
 
-window.addEventListener('beforeunload', async function(e){
-  chrome.runtime.sendMessage({ task: "restart" });
-})
+(function(host){
+  if (!host){
+    console.warn(`Can't find host: ${Booking.config.filterContainerSelector}`)
+    return;
+  }
 
-document.querySelector('#host').innerHTML = '<bpt-presets>hello</bpt-presets>'
+  const presets = document.createElement('bpt-presets');
+  const presetsData = [
+    {
+      name: 'Road trip',
+      value: 'review_score=80;hotelfacility=2;'
+    },
+    {
+      name: 'Business trip',
+      value: 'review_score=80;hotelfacility=107;hr_24=8;'
+    }
+  ];
+
+  presets.setIntialState({presets: presetsData});
+  presets.setAttribute('current', Booking.getFiltersFromURL(window.location.toString()))
+
+  presets.addEventListener('presetchanged', (e) => {
+    const url = Booking.extendURLWithFilters(window.location.toString(), e.detail);
+    window.location = url;
+  });
+
+  presets.addEventListener('presetcreated', (e) => {});
+  presets.addEventListener('presetdeleted', (e) => {});
+
+  const port = chrome.runtime.connect(chrome.runtime.id);
+  port.onMessage.addListener(
+    function(payload, sender, callback) {
+      presets.setAttribute('filters', Booking.getFiltersFromURL(window.location.toString()))
+    });
+
+  // Dev mode only. REMOVE BEFORE FLIGHT
+  window.addEventListener('beforeunload', async function(e){
+    chrome.runtime.sendMessage({ task: "restart" });
+  })
+
+  host.prepend(presets);
+
+})(document.querySelector(Booking.config.filterContainerSelector))
+
+
+
+  // chrome.storage.sync.set({'foo': 'hello', 'bar': 'hi'}, function() {
+  //   console.log('Settings saved');
+  // });
