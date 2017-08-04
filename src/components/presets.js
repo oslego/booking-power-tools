@@ -1,13 +1,5 @@
-// import HyperHTMLElement from '../HyperHTMLElement';
-// import hyperHTML from '../hyperHTML';
-
 const hyperHTML = require('hyperhtml');
 const HyperHTMLElement = require('hyperhtml-element');
-
-
-function OptionElement(preset) {
-  return hyperHTML.wire(preset, ':option')`<option value="${preset.value}">${preset.name}</option>`;
-}
 
 // Create a class for the element
 class BPTPresets extends HyperHTMLElement {
@@ -16,7 +8,10 @@ class BPTPresets extends HyperHTMLElement {
     super();
 
     this.state = {
-      isFormVisible: false,
+      isFormVisible: true,
+      isFormValid: false,
+      filter: '',
+      presetName: '',
       presets: []
     };
 
@@ -25,18 +20,6 @@ class BPTPresets extends HyperHTMLElement {
 
     this.init();
   }
-
-  // observed attributes are automatically defined as accessors
- static get observedAttributes() { return ['filters']; }
-
- attributeChangedCallback(name, prev, curr) {
-   // when invoked, attributes will be already reflected
-   // through their accessor
-   this.key === curr; // true, and curr === "value"
-  //  this.getAttribute('key') === this.key; // always true
-   this.render();
- }
-
 
  render() {
    const css = `
@@ -69,6 +52,12 @@ class BPTPresets extends HyperHTMLElement {
        text-transform: uppercase;
        border-radius: 2px;
        cursor: pointer;
+     }
+
+     .button[disabled] {
+       cursor: default;
+       background: silver;
+       color: white;
      }
 
      .button--positive {
@@ -140,7 +129,8 @@ class BPTPresets extends HyperHTMLElement {
          <label for="use-preset">
            Use saved filter preset:
          </label>
-         <select name="preset" id="use-preset">${
+         <select name="preset" id="use-preset">
+           <option value="">None</option>${
             // this.state.presets.map(preset => return OptionElement(preset))
             this.state.presets.map(preset => {return `<option value="${preset.value}">${preset.name}</option>`})
          }</select>
@@ -150,30 +140,25 @@ class BPTPresets extends HyperHTMLElement {
          Save selected filters as preset
        </a>
 
-       <form id="container-new-preset" class="${this.state.isFormVisible ? '' : 'u-hidden'}">
+       <form id="container-new-preset" class="${this.state.isFormVisible ? '' : 'u-hidden'}" onsubmit="${this.onSaveNewPreset.bind(this)}">
          <label for="new-preset">
            Create new preset:
          </label>
 
-         <input type="text" name="new-preset" id="new-preset" placeholder="Name" />
+         <input type="text" name="new-preset"
+           id="new-preset"
+           placeholder="Name"
+           value="${this.state.presetName}"
+           oninput="${this.definePreset.bind(this)}" />
 
-         <div class="quiet u-center" id="or-separator"> - OR - </div>
-
-         <label for="replace-preset">
-           Replace existing preset:
-         </label>
-
-         <select name="preset" id="replace-preset">${
-            // this.state.presets.map(preset => OptionElement(preset))
-            this.state.presets.map(preset => {return `<option value="${preset.value}">${preset.name}</option>`})
-         }</select>
+         <div>${this.state.presets.length && this.ReplacePresetTemplate()}</div>
 
          <div class="actionlist actionlist--spaced">
            <a href="#" class="link link--quiet" id="action-cancel-save-preset">
              Cancel
            </a>
 
-           <button class="button button--positive" id="action-save-preset">
+           <button class="button button--positive" id="action-save-preset" disabled="${this.state.isFormValid ? '' : 'disabled'}">
              Save
            </button>
          </div>
@@ -183,19 +168,28 @@ class BPTPresets extends HyperHTMLElement {
    `;
  }
 
+ ReplacePresetTemplate() {
+  return hyperHTML.wire()`
+  <div class="quiet u-center" id="or-separator"> - OR - </div>
+    <label for="replace-preset">
+      Replace existing preset:
+    </label>
+
+    <select name="preset" id="replace-preset">
+      <option value="">None</option>${
+       this.state.presets.map(preset => {return `<option value="${preset.value}" ${preset.selected ? 'selected' : ''}>${preset.name}</option>`})
+    }</select>
+  `;
+ }
+
   // Monitor the attributes for changes.
-  static get observedAttributes() { return ['current', 'presets']; }
+  static get observedAttributes() { return ['filter']; }
 
   // Respond to attribute changes.
   attributeChangedCallback(attr, oldValue, newValue) {
-    if (attr == 'current') {
+    if (attr == 'filter') {
       const clone = Object.assign({}, this.state);
-
-      clone.presets = clone.presets.map(preset => {
-        preset.selected = (preset.value === newValue) ? true : false;
-        return preset;
-      })
-
+      clone.filter = newValue;
       this.setState(clone)
       return;
     }
@@ -218,7 +212,8 @@ class BPTPresets extends HyperHTMLElement {
     // Group events by type and map them by target element ID to handler functions
     const handlers = {
       "change": {
-        "use-preset": this.changePreset
+        "use-preset": this.changePreset,
+        "replace-preset": this.definePreset
       },
       "click": {
         "action-show-preset-form": this.togglePresetForm,
@@ -242,6 +237,65 @@ class BPTPresets extends HyperHTMLElement {
   togglePresetForm() {
     const clone = Object.assign({}, this.state);
     clone.isFormVisible = !clone.isFormVisible;
+    this.setState(clone);
+  }
+
+  definePreset(e) {
+    const clone = Object.assign({}, this.state);
+    let presetValue = '';
+
+    // If picking a preset from the dropdown, reset the text input
+    if (e.target.id === "replace-preset") {
+      clone.presetName = '';
+      presetValue = e.target.value;
+    }
+
+    // If defining a new preset name in the input, reset the dropdown
+    if (e.target.id === "new-preset") {
+      clone.presetName = e.target.value.trim();
+      presetValue = '';
+    }
+
+    // Mark the selected preset so the right `<option>` element gets selected on render.
+    clone.presets = clone.presets.map(preset => {
+      preset.selected = (preset.value === presetValue);
+      return preset;
+    })
+
+    // If input is empty or the "None" preset is selected, the form can't be submitted.
+    clone.isFormValid = e.target.value.trim().length ? true : false;
+    this.setState(clone);
+  }
+
+  onSaveNewPreset(e) {
+    e.preventDefault();
+
+    // Prevent submit if somehow reached here with invalid form.
+    if (!this.state.isFormValid) {
+      return;
+    }
+
+    const clone = Object.assign({}, this.state);
+
+    // Create new preset with value of `this.state.filter`
+    if (this.state.presetName.length !== 0) {
+      clone.presets.push({
+        name: this.state.presetName,
+        value: this.state.filter
+      });
+    }
+
+    const index = clone.presets.findIndex(preset => {
+      return preset.selected === true;
+    })
+
+    if (index !== -1) {
+      clone.presets[index].value = this.state.filter
+    }
+
+    clone.presetName = ''
+    clone.isFormValid = false;
+
     this.setState(clone);
   }
 
