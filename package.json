@@ -1,12 +1,13 @@
 {
-  "name": "booking-power-tools",
+  "name": "chrome-booking-power-tools",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run build\" \"npm run preview\"",
     "build": "webpack -w",
-    "preview": "serve --silent --open --cache 0"
+    "preview": "serve --silent --open --cache 0",
+    "package": "zip -r chrome-extension.zip ./chrome-extension"
   },
   "author": "",
   "license": "ISC",
