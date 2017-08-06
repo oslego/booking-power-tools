@@ -2,6 +2,7 @@ import '../vendor/custom-elements.min.js';
 import Presets from './components/presets.js';
 import Storage from './Storage.js';
 import Booking from './booking.js';
+import StorageInspector from './StorageInspector';
 
 (function(){
   const host = document.querySelector(Booking.config.filterContainerSelector);
@@ -76,6 +77,7 @@ import Booking from './booking.js';
     chrome.runtime.sendMessage({ task: "restart" });
   })
 
-})()
+  // Dev mode only. REMOVE BEFORE FLIGHT
+  document.body.appendChild(new StorageInspector())
 
 })();
