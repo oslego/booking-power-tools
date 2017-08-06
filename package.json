@@ -10,7 +10,7 @@
     "package": "zip -r chrome-extension.zip ./chrome-extension"
   },
   "author": "",
-  "license": "ISC",
+  "license": "BSD",
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
