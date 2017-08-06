@@ -2,12 +2,14 @@ const hyperHTML = require('hyperhtml');
 const HyperHTMLElement = require('hyperhtml-element');
 
 // Create a class for the element
-class BPTPresets extends HyperHTMLElement {
-  constructor() {
+class Presets extends HyperHTMLElement {
+  constructor(state = {}) {
     // Always call super first in constructor
     super();
 
-    this.state = {
+
+
+    const defaultState = {
       isFormVisible: false,
       isFormValid: false,
       filter: '',
@@ -15,10 +17,16 @@ class BPTPresets extends HyperHTMLElement {
       presets: []
     };
 
+    this.state =  Object.assign({}, defaultState, state)
+
+    console.log(this.state);
+
     // Create a shadow root
     this.shadow = this.attachShadow({mode: 'open'});
 
-    this.init();
+    // Delegate events to handleEvent()
+    this.shadowRoot.addEventListener('change', this);
+    this.shadowRoot.addEventListener('click', this);
   }
 
  render() {
@@ -32,7 +40,9 @@ class BPTPresets extends HyperHTMLElement {
      }
 
      .presets {
-       padding: 7px;
+      //  padding: 7px;
+       margin-bottom: 20px;
+       font-size: 13px;
      }
 
      label {
@@ -78,6 +88,12 @@ class BPTPresets extends HyperHTMLElement {
        width: 100%;
        font-size: 14px;
        margin: 0;
+       margin-bottom: 10px
+     }
+
+     .info {
+       background: #eaeaea;
+       padding: 5px;
      }
 
      .link {
@@ -120,14 +136,26 @@ class BPTPresets extends HyperHTMLElement {
      }
 
      #or-separator {
-       margin: 10px 0;
+       margin-bottm: 0;
+     }
+
+     h3 {
+       color: #003580;
+       padding: 0 0 0 2px;
+       margin: 0;
+       margin-bottom: 13px;
+       font-size: 20px;
+       line-height: 28px;
+       font-weight: 500
      }
    `;
 
    return this.html`<style>${css}</style><div class="presets">
-       <div>${this.state.presets.length && this.UsePresetTemplate() }</div>
+       <h3>Filter presets</h3>
 
-       <div>${this.state.filter && this.NewPresetPromptTemplate() }</div>
+       <div>${ (this.state.presets.length === 0) ? this.NoPresetsTemplate() : this.UsePresetTemplate() }</div>
+
+       <div>${ this.NewPresetPromptTemplate() }</div>
 
        <form id="container-new-preset" class="${this.state.isFormVisible ? '' : 'u-hidden'}" onsubmit="${this.onSaveNewPreset.bind(this)}">
          <label for="new-preset">
@@ -140,7 +168,7 @@ class BPTPresets extends HyperHTMLElement {
            value="${this.state.presetName}"
            oninput="${this.definePreset.bind(this)}" />
 
-         <div>${this.state.presets.length && this.ReplacePresetTemplate()}</div>
+         <div>${this.ReplacePresetTemplate()}</div>
 
          <div class="actionlist actionlist--spaced">
            <a href="#" class="link link--quiet" id="action-cancel-save-preset">
@@ -157,16 +185,30 @@ class BPTPresets extends HyperHTMLElement {
    `;
  }
 
+ NoPresetsTemplate() {
+   return hyperHTML.wire()`
+     <p class="${this.state.isFormVisible ? 'u-hidden info quiet' : 'info quiet'}">You do not have any saved filter presets yet.</p>
+   `;
+ }
+
  NewPresetPromptTemplate() {
+   if (!this.state.filter) {
+     return hyperHTML.wire()`<span class="quiet">Select some filters to create a new preset.</span>`;
+   }
+
    return hyperHTML.wire()`<a href="#" class="${this.state.isFormVisible ? 'u-hidden link' : 'link'}" id="action-show-preset-form">
      Save selected filters as preset
    </a>`;
  }
 
  UsePresetTemplate() {
+   if (this.state.presets.length === 0){
+     return ''
+   }
+
   return hyperHTML.wire()`<div id="container-use-preset" class="${this.state.isFormVisible ? 'u-hidden' : ''}">
     <label for="use-preset">
-      Use saved filter preset:
+      Use preset:
     </label>
     <select name="preset" id="use-preset">
       <option value="">None</option>${
@@ -177,6 +219,10 @@ class BPTPresets extends HyperHTMLElement {
  }
 
  ReplacePresetTemplate() {
+   if (this.state.presets.length === 0){
+     return ''
+   }
+
   return hyperHTML.wire()`
   <div class="quiet u-center" id="or-separator"> - OR - </div>
     <label for="replace-preset">
@@ -195,8 +241,15 @@ class BPTPresets extends HyperHTMLElement {
 
   // Respond to attribute changes.
   attributeChangedCallback(attr, oldValue, newValue) {
+
+    // Cast falsy values to explicit null
+    newValue = (newValue === "") ? null : newValue;
+    newValue = (newValue === "null") ? null : newValue;
+    newValue = (newValue === "undefined") ? null : newValue;
+
     if (attr == 'value') {
-      // console.log('value:', newValue, typeof newValue)
+      // console.warn('value:', newValue, typeof newValue)
+
       const clone = Object.assign({}, this.state);
       // Define the current filter as the `value` attribute value.
       clone.filter = newValue;
@@ -206,11 +259,6 @@ class BPTPresets extends HyperHTMLElement {
       this.setState(clone);
       return;
     }
-  }
-
-  setIntialState(state) {
-    const initialState = Object.assign(this.state, state);
-    this.setState(initialState);
   }
 
   setState(state) {
@@ -268,7 +316,9 @@ class BPTPresets extends HyperHTMLElement {
     this.setState(clone);
   }
 
-  togglePresetForm() {
+  togglePresetForm(e) {
+    e.preventDefault();
+
     const clone = Object.assign({}, this.state);
     clone.isFormVisible = !clone.isFormVisible;
     this.setState(clone);
@@ -314,25 +364,24 @@ class BPTPresets extends HyperHTMLElement {
         name: this.state.presetName,
         value: this.state.filter
       });
+    } else {
+      const index = clone.presets.findIndex(preset => {
+        return preset.selected === true;
+      })
+
+      if (index !== -1) {
+        clone.presets[index].value = this.state.filter
+      }
     }
 
-    const index = clone.presets.findIndex(preset => {
-      return preset.selected === true;
-    })
-
-    if (index !== -1) {
-      clone.presets[index].value = this.state.filter
-    }
+    // Mark the newly created or replaced filter as selected.
+    clone.presets = this.markSelectedPreset(clone.presets, this.state.filter);
 
     clone.presetName = ''
     clone.isFormValid = false;
+    clone.isFormVisible = false;
 
     this.setState(clone);
-  }
-
-  init() {
-    this.shadowRoot.addEventListener('change', this);
-    this.shadowRoot.addEventListener('click', this);
   }
 
   connectedCallback() {
@@ -341,6 +390,6 @@ class BPTPresets extends HyperHTMLElement {
 }
 
 // Define the new element
-customElements.define('bpt-presets', BPTPresets);
+customElements.define('bpt-presets', Presets);
 
-export default BPTPresets;
+export default Presets;

@@ -64,252 +64,7 @@
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */,
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _presets = __webpack_require__(2);
-
-var _presets2 = _interopRequireDefault(_presets);
-
-var _booking = __webpack_require__(5);
-
-var _booking2 = _interopRequireDefault(_booking);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-(function (host) {
-  if (!host) {
-    console.warn('Can\'t find host: ' + _booking2.default.config.filterContainerSelector);
-    return;
-  }
-
-  var presets = document.createElement('bpt-presets');
-  var presetsData = [{
-    name: 'Road trip',
-    value: 'review_score=80;hotelfacility=2;'
-  }, {
-    name: 'Business trip',
-    value: 'review_score=80;hotelfacility=107;hr_24=8;'
-  }];
-
-  presets.setIntialState({ presets: presetsData });
-  presets.setAttribute('current', _booking2.default.getFiltersFromURL(window.location.toString()));
-
-  presets.addEventListener('presetchanged', function (e) {
-    var url = _booking2.default.extendURLWithFilters(window.location.toString(), e.detail);
-    window.location = url;
-  });
-
-  presets.addEventListener('presetcreated', function (e) {});
-  presets.addEventListener('presetdeleted', function (e) {});
-
-  var port = chrome.runtime.connect(chrome.runtime.id);
-  port.onMessage.addListener(function (payload, sender, callback) {
-    presets.setAttribute('filters', _booking2.default.getFiltersFromURL(window.location.toString()));
-  });
-
-  // Dev mode only. REMOVE BEFORE FLIGHT
-  window.addEventListener('beforeunload', async function (e) {
-    chrome.runtime.sendMessage({ task: "restart" });
-  });
-
-  host.prepend(presets);
-})(document.querySelector(_booking2.default.config.filterContainerSelector));
-
-// chrome.storage.sync.set({'foo': 'hello', 'bar': 'hi'}, function() {
-//   console.log('Settings saved');
-// });
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _templateObject = _taggedTemplateLiteral(['<option value="', '">', '</option>'], ['<option value="', '">', '</option>']),
-    _templateObject2 = _taggedTemplateLiteral(['<style>', '</style><div class="presets">\n       <div id="container-use-preset" class="', '">\n         <label for="use-preset">\n           Use saved filter preset:\n         </label>\n         <select name="preset" id="use-preset">', '</select>\n       </div>\n\n       <a href="#" class="', '" id="action-show-preset-form">\n         Save selected filters as preset\n       </a>\n\n       <form id="container-new-preset" class="', '">\n         <label for="new-preset">\n           Create new preset:\n         </label>\n\n         <input type="text" name="new-preset" id="new-preset" placeholder="Name" />\n\n         <div class="quiet u-center" id="or-separator"> - OR - </div>\n\n         <label for="replace-preset">\n           Replace existing preset:\n         </label>\n\n         <select name="preset" id="replace-preset">', '</select>\n\n         <div class="actionlist actionlist--spaced">\n           <a href="#" class="link link--quiet" id="action-cancel-save-preset">\n             Cancel\n           </a>\n\n           <button class="button button--positive" id="action-save-preset">\n             Save\n           </button>\n         </div>\n\n       </form>\n     </div>\n   '], ['<style>', '</style><div class="presets">\n       <div id="container-use-preset" class="', '">\n         <label for="use-preset">\n           Use saved filter preset:\n         </label>\n         <select name="preset" id="use-preset">', '</select>\n       </div>\n\n       <a href="#" class="', '" id="action-show-preset-form">\n         Save selected filters as preset\n       </a>\n\n       <form id="container-new-preset" class="', '">\n         <label for="new-preset">\n           Create new preset:\n         </label>\n\n         <input type="text" name="new-preset" id="new-preset" placeholder="Name" />\n\n         <div class="quiet u-center" id="or-separator"> - OR - </div>\n\n         <label for="replace-preset">\n           Replace existing preset:\n         </label>\n\n         <select name="preset" id="replace-preset">', '</select>\n\n         <div class="actionlist actionlist--spaced">\n           <a href="#" class="link link--quiet" id="action-cancel-save-preset">\n             Cancel\n           </a>\n\n           <button class="button button--positive" id="action-save-preset">\n             Save\n           </button>\n         </div>\n\n       </form>\n     </div>\n   ']);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-// import HyperHTMLElement from '../HyperHTMLElement';
-// import hyperHTML from '../hyperHTML';
-
-var hyperHTML = __webpack_require__(4);
-var HyperHTMLElement = __webpack_require__(6);
-
-function OptionElement(preset) {
-  return hyperHTML.wire(preset, ':option')(_templateObject, preset.value, preset.name);
-}
-
-// Create a class for the element
-
-var BPTPresets = function (_HyperHTMLElement) {
-  _inherits(BPTPresets, _HyperHTMLElement);
-
-  function BPTPresets() {
-    _classCallCheck(this, BPTPresets);
-
-    var _this = _possibleConstructorReturn(this, (BPTPresets.__proto__ || Object.getPrototypeOf(BPTPresets)).call(this));
-    // Always call super first in constructor
-
-
-    _this.state = {
-      isFormVisible: false,
-      presets: []
-    };
-
-    // Create a shadow root
-    _this.shadow = _this.attachShadow({ mode: 'open' });
-
-    _this.init();
-    return _this;
-  }
-
-  // observed attributes are automatically defined as accessors
-
-
-  _createClass(BPTPresets, [{
-    key: 'attributeChangedCallback',
-    value: function attributeChangedCallback(name, prev, curr) {
-      // when invoked, attributes will be already reflected
-      // through their accessor
-      this.key === curr; // true, and curr === "value"
-      //  this.getAttribute('key') === this.key; // always true
-      this.render();
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var css = '\n     :host{\n       font-family: -apple-system, BlinkMacSystemFont, \u201CSegoe UI\u201D, Roboto, Helvetica, Arial, sans-serif;\n     }\n\n     * {\n       box-sizing: border-box;\n     }\n\n     .presets {\n       padding: 7px;\n     }\n\n     label {\n       display: block;\n       margin-bottom: 5px;\n       padding: 3px 0 2px;\n       font-size: 14px;\n       color: #003580;\n       font-weight: bold;\n     }\n\n     .button {\n       border: none;\n       padding: 7px 10px;\n       color: white;\n       font-weight: 500;\n       text-transform: uppercase;\n       border-radius: 2px;\n       cursor: pointer;\n     }\n\n     .button--positive {\n       background: #43A047;\n     }\n\n     .button--danger {\n       background: #D32F2F;\n     }\n\n     select {\n       width: 100%;\n       font-size: 14px;\n       margin-bottom: 10px;\n     }\n\n     input {\n       width: 100%;\n       font-size: 14px;\n       margin: 0;\n     }\n\n     .link {\n       color: #07c;\n       font-size: 13px;\n     }\n\n     .link:hover {\n       text-decoration: none;\n     }\n\n     .link--quiet,\n     .quiet {\n       color: #838383;\n     }\n\n     .u-center {\n       text-align: center;\n     }\n\n     .u-hidden {\n       display: none;\n     }\n\n     .link--quiet:hover{\n       color: #444;\n     }\n\n     .actionlist {\n       display: flex;\n       align-items: baseline;\n     }\n\n     .actionlist--packed-end {\n       justify-content: flex-end;\n     }\n\n     .actionlist--spaced {\n       justify-content: space-between;\n     }\n\n     #or-separator {\n       margin: 10px 0;\n     }\n   ';
-
-      return this.html(_templateObject2, css, this.state.isFormVisible ? 'u-hidden' : '',
-      // this.state.presets.map(preset => return OptionElement(preset))
-      this.state.presets.map(function (preset) {
-        return '<option value="' + preset.value + '">' + preset.name + '</option>';
-      }), this.state.isFormVisible ? 'u-hidden link' : 'link', this.state.isFormVisible ? '' : 'u-hidden',
-      // this.state.presets.map(preset => OptionElement(preset))
-      this.state.presets.map(function (preset) {
-        return '<option value="' + preset.value + '">' + preset.name + '</option>';
-      }));
-    }
-
-    // Monitor the attributes for changes.
-
-  }, {
-    key: 'attributeChangedCallback',
-
-
-    // Respond to attribute changes.
-    value: function attributeChangedCallback(attr, oldValue, newValue) {
-      if (attr == 'current') {
-        var clone = Object.assign({}, this.state);
-
-        clone.presets = clone.presets.map(function (preset) {
-          preset.selected = preset.value === newValue ? true : false;
-          return preset;
-        });
-
-        this.setState(clone);
-        return;
-      }
-    }
-  }, {
-    key: 'setIntialState',
-    value: function setIntialState(state) {
-      var initialState = Object.assign(this.state, state);
-      this.setState(initialState);
-    }
-  }, {
-    key: 'setState',
-    value: function setState(state) {
-      this.state = state;
-      // console.info('State changed:', state)
-      this.render();
-    }
-  }, {
-    key: 'handleEvent',
-    value: function handleEvent(e) {
-      // console.log(e.type, e.target)
-
-      // Group events by type and map them by target element ID to handler functions
-      var handlers = {
-        "change": {
-          "use-preset": this.changePreset
-        },
-        "click": {
-          "action-show-preset-form": this.togglePresetForm,
-          "action-cancel-save-preset": this.togglePresetForm
-        }
-      };
-
-      try {
-        handlers[e.type][e.target.id].call(this, e);
-      } catch (err) {
-        // catch any errors because of non-existing handlers
-        // console.warn(err)
-      }
-    }
-  }, {
-    key: 'changePreset',
-    value: function changePreset(e) {
-      var detail = e.target.value;
-      this.dispatchEvent(new CustomEvent('presetchanged', { detail: detail }));
-    }
-  }, {
-    key: 'togglePresetForm',
-    value: function togglePresetForm() {
-      var clone = Object.assign({}, this.state);
-      clone.isFormVisible = !clone.isFormVisible;
-      this.setState(clone);
-    }
-  }, {
-    key: 'init',
-    value: function init() {
-      this.shadowRoot.addEventListener('change', this);
-      this.shadowRoot.addEventListener('click', this);
-    }
-  }, {
-    key: 'connectedCallback',
-    value: function connectedCallback() {
-      this.render();
-    }
-  }], [{
-    key: 'observedAttributes',
-    get: function get() {
-      return ['current', 'presets'];
-    }
-  }]);
-
-  return BPTPresets;
-}(HyperHTMLElement);
-
-// Define the new element
-
-
-customElements.define('bpt-presets', BPTPresets);
-
-exports.default = BPTPresets;
-
-/***/ }),
-/* 3 */,
-/* 4 */
+/* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1306,7 +1061,86 @@ try {
 } catch (o_O) {}
 
 /***/ }),
-/* 5 */
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _presets = __webpack_require__(2);
+
+var _presets2 = _interopRequireDefault(_presets);
+
+var _booking = __webpack_require__(4);
+
+var _booking2 = _interopRequireDefault(_booking);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(function () {
+  var host = document.querySelector(_booking2.default.config.filterContainerSelector);
+
+  if (!host) {
+    console.warn('Did not find host: ' + _booking2.default.config.filterContainerSelector);
+    return;
+  }
+
+  function onRuntimeMessage(message, sender, callback) {
+    var handlers = {
+      "tabupdated": onURLChange
+    };
+
+    try {
+      handlers[message.name].call(this, message);
+    } catch (err) {
+      // message unhandled
+      // console.warn(message, err)
+    }
+  }
+
+  function onURLChange(data) {
+    var url = new URL(data.tab.url);
+    presets.setAttribute('value', _booking2.default.getFiltersFromURL(url.search));
+  }
+
+  var port = chrome.runtime.connect(chrome.runtime.id);
+  port.onMessage.addListener(onRuntimeMessage);
+
+  var presetsData = [{
+    name: 'Road trip',
+    value: 'review_score=80;hotelfacility=2;'
+  }, {
+    name: 'Business trip',
+    value: 'review_score=80;hotelfacility=107;hr_24=8;'
+  }];
+
+  var presets = new _presets2.default({ presets: presetsData });
+
+  presets.addEventListener('presetchanged', function (e) {
+    var url = _booking2.default.extendURLWithFilters(window.location.toString(), e.detail);
+    window.location = url;
+  });
+
+  presets.addEventListener('presetcreated', function (e) {});
+  presets.addEventListener('presetdeleted', function (e) {});
+
+  // presets.setIntialState({presets: presetsData});
+  presets.setAttribute('value', _booking2.default.getFiltersFromURL(window.location.search.toString()));
+
+  host.prepend(presets);
+
+  // Dev mode only. REMOVE BEFORE FLIGHT
+  window.addEventListener('beforeunload', function (e) {
+    chrome.runtime.sendMessage({ task: "restart" });
+  });
+})();
+
+// chrome.storage.sync.set({'foo': 'hello', 'bar': 'hi'}, function() {
+//   console.log('Settings saved');
+// });
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1318,44 +1152,290 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _templateObject = _taggedTemplateLiteral(['<style>', '</style><div class="presets">\n       <h3>Filter presets</h3>\n\n       <div>', '</div>\n\n       <div>', '</div>\n\n       <form id="container-new-preset" class="', '" onsubmit="', '">\n         <label for="new-preset">\n           Create new preset:\n         </label>\n\n         <input type="text" name="new-preset"\n           id="new-preset"\n           placeholder="Name"\n           value="', '"\n           oninput="', '" />\n\n         <div>', '</div>\n\n         <div class="actionlist actionlist--spaced">\n           <a href="#" class="link link--quiet" id="action-cancel-save-preset">\n             Cancel\n           </a>\n\n           <button class="button button--positive" id="action-save-preset" disabled="', '">\n             Save\n           </button>\n         </div>\n\n       </form>\n     </div>\n   '], ['<style>', '</style><div class="presets">\n       <h3>Filter presets</h3>\n\n       <div>', '</div>\n\n       <div>', '</div>\n\n       <form id="container-new-preset" class="', '" onsubmit="', '">\n         <label for="new-preset">\n           Create new preset:\n         </label>\n\n         <input type="text" name="new-preset"\n           id="new-preset"\n           placeholder="Name"\n           value="', '"\n           oninput="', '" />\n\n         <div>', '</div>\n\n         <div class="actionlist actionlist--spaced">\n           <a href="#" class="link link--quiet" id="action-cancel-save-preset">\n             Cancel\n           </a>\n\n           <button class="button button--positive" id="action-save-preset" disabled="', '">\n             Save\n           </button>\n         </div>\n\n       </form>\n     </div>\n   ']),
+    _templateObject2 = _taggedTemplateLiteral(['\n     <p class="', '">You do not have any saved filter presets yet.</p>\n   '], ['\n     <p class="', '">You do not have any saved filter presets yet.</p>\n   ']),
+    _templateObject3 = _taggedTemplateLiteral(['<span class="quiet">Select some filters to create a new preset.</span>'], ['<span class="quiet">Select some filters to create a new preset.</span>']),
+    _templateObject4 = _taggedTemplateLiteral(['<a href="#" class="', '" id="action-show-preset-form">\n     Save selected filters as preset\n   </a>'], ['<a href="#" class="', '" id="action-show-preset-form">\n     Save selected filters as preset\n   </a>']),
+    _templateObject5 = _taggedTemplateLiteral(['<div id="container-use-preset" class="', '">\n    <label for="use-preset">\n      Use preset:\n    </label>\n    <select name="preset" id="use-preset">\n      <option value="">None</option>', '</select>\n  </div>'], ['<div id="container-use-preset" class="', '">\n    <label for="use-preset">\n      Use preset:\n    </label>\n    <select name="preset" id="use-preset">\n      <option value="">None</option>', '</select>\n  </div>']),
+    _templateObject6 = _taggedTemplateLiteral(['\n  <div class="quiet u-center" id="or-separator"> - OR - </div>\n    <label for="replace-preset">\n      Replace existing preset:\n    </label>\n\n    <select name="preset" id="replace-preset">\n      <option value="">None</option>', '</select>\n  '], ['\n  <div class="quiet u-center" id="or-separator"> - OR - </div>\n    <label for="replace-preset">\n      Replace existing preset:\n    </label>\n\n    <select name="preset" id="replace-preset">\n      <option value="">None</option>', '</select>\n  ']);
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Booking = function () {
-  function Booking() {
-    _classCallCheck(this, Booking);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var hyperHTML = __webpack_require__(0);
+var HyperHTMLElement = __webpack_require__(3);
+
+// Create a class for the element
+
+var Presets = function (_HyperHTMLElement) {
+  _inherits(Presets, _HyperHTMLElement);
+
+  function Presets() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, Presets);
+
+    var _this = _possibleConstructorReturn(this, (Presets.__proto__ || Object.getPrototypeOf(Presets)).call(this));
+    // Always call super first in constructor
+
+
+    var defaultState = {
+      isFormVisible: false,
+      isFormValid: false,
+      filter: '',
+      presetName: '',
+      presets: []
+    };
+
+    _this.state = Object.assign({}, defaultState, state);
+
+    console.log(_this.state);
+
+    // Create a shadow root
+    _this.shadow = _this.attachShadow({ mode: 'open' });
+
+    // Delegate events to handleEvent()
+    _this.shadowRoot.addEventListener('change', _this);
+    _this.shadowRoot.addEventListener('click', _this);
+    return _this;
   }
 
-  _createClass(Booking, null, [{
-    key: 'getFiltersFromURL',
-    value: function getFiltersFromURL(url) {
-      var params = new URLSearchParams(url);
-      return params.get(this.config.filterParamName);
-    }
-  }, {
-    key: 'extendURLWithFilters',
-    value: function extendURLWithFilters(url, filters) {
-      var urlObj = new URL(url);
-      urlObj.searchParams.set(this.config.filterParamName, filters);
+  _createClass(Presets, [{
+    key: 'render',
+    value: function render() {
+      var css = '\n     :host{\n       font-family: -apple-system, BlinkMacSystemFont, \u201CSegoe UI\u201D, Roboto, Helvetica, Arial, sans-serif;\n     }\n\n     * {\n       box-sizing: border-box;\n     }\n\n     .presets {\n      //  padding: 7px;\n       margin-bottom: 20px;\n       font-size: 13px;\n     }\n\n     label {\n       display: block;\n       margin-bottom: 5px;\n       padding: 3px 0 2px;\n       font-size: 14px;\n       color: #003580;\n       font-weight: bold;\n     }\n\n     .button {\n       border: none;\n       padding: 7px 10px;\n       color: white;\n       font-weight: 500;\n       text-transform: uppercase;\n       border-radius: 2px;\n       cursor: pointer;\n     }\n\n     .button[disabled] {\n       cursor: default;\n       background: silver;\n       color: white;\n     }\n\n     .button--positive {\n       background: #43A047;\n     }\n\n     .button--danger {\n       background: #D32F2F;\n     }\n\n     select {\n       width: 100%;\n       font-size: 14px;\n       margin-bottom: 10px;\n     }\n\n     input {\n       width: 100%;\n       font-size: 14px;\n       margin: 0;\n       margin-bottom: 10px\n     }\n\n     .info {\n       background: #eaeaea;\n       padding: 5px;\n     }\n\n     .link {\n       color: #07c;\n       font-size: 13px;\n     }\n\n     .link:hover {\n       text-decoration: none;\n     }\n\n     .link--quiet,\n     .quiet {\n       color: #838383;\n     }\n\n     .u-center {\n       text-align: center;\n     }\n\n     .u-hidden {\n       display: none;\n     }\n\n     .link--quiet:hover{\n       color: #444;\n     }\n\n     .actionlist {\n       display: flex;\n       align-items: baseline;\n     }\n\n     .actionlist--packed-end {\n       justify-content: flex-end;\n     }\n\n     .actionlist--spaced {\n       justify-content: space-between;\n     }\n\n     #or-separator {\n       margin-bottm: 0;\n     }\n\n     h3 {\n       color: #003580;\n       padding: 0 0 0 2px;\n       margin: 0;\n       margin-bottom: 13px;\n       font-size: 20px;\n       line-height: 28px;\n       font-weight: 500\n     }\n   ';
 
-      return '' + urlObj.origin + urlObj.pathname + '?' + urlObj.searchParams.toString();
+      return this.html(_templateObject, css, this.state.presets.length === 0 ? this.NoPresetsTemplate() : this.UsePresetTemplate(), this.NewPresetPromptTemplate(), this.state.isFormVisible ? '' : 'u-hidden', this.onSaveNewPreset.bind(this), this.state.presetName, this.definePreset.bind(this), this.ReplacePresetTemplate(), this.state.isFormValid ? '' : 'disabled');
     }
   }, {
-    key: 'config',
+    key: 'NoPresetsTemplate',
+    value: function NoPresetsTemplate() {
+      return hyperHTML.wire()(_templateObject2, this.state.isFormVisible ? 'u-hidden info quiet' : 'info quiet');
+    }
+  }, {
+    key: 'NewPresetPromptTemplate',
+    value: function NewPresetPromptTemplate() {
+      if (!this.state.filter) {
+        return hyperHTML.wire()(_templateObject3);
+      }
+
+      return hyperHTML.wire()(_templateObject4, this.state.isFormVisible ? 'u-hidden link' : 'link');
+    }
+  }, {
+    key: 'UsePresetTemplate',
+    value: function UsePresetTemplate() {
+      if (this.state.presets.length === 0) {
+        return '';
+      }
+
+      return hyperHTML.wire()(_templateObject5, this.state.isFormVisible ? 'u-hidden' : '',
+      // this.state.presets.map(preset => return OptionElement(preset))
+      this.state.presets.map(function (preset) {
+        return '<option value="' + preset.value + '" ' + (preset.selected ? 'selected' : '') + '>' + preset.name + '</option>';
+      }));
+    }
+  }, {
+    key: 'ReplacePresetTemplate',
+    value: function ReplacePresetTemplate() {
+      if (this.state.presets.length === 0) {
+        return '';
+      }
+
+      return hyperHTML.wire()(_templateObject6, this.state.presets.map(function (preset) {
+        return '<option value="' + preset.value + '" ' + (preset.selected ? 'selected' : '') + '>' + preset.name + '</option>';
+      }));
+    }
+
+    // Monitor the attributes for changes.
+
+  }, {
+    key: 'attributeChangedCallback',
+
+
+    // Respond to attribute changes.
+    value: function attributeChangedCallback(attr, oldValue, newValue) {
+
+      // Cast falsy values to explicit null
+      newValue = newValue === "" ? null : newValue;
+      newValue = newValue === "null" ? null : newValue;
+      newValue = newValue === "undefined" ? null : newValue;
+
+      if (attr == 'value') {
+        // console.warn('value:', newValue, typeof newValue)
+
+        var clone = Object.assign({}, this.state);
+        // Define the current filter as the `value` attribute value.
+        clone.filter = newValue;
+        // Mark as selected any preset whose value matches the `value` attribute value.
+        clone.presets = this.markSelectedPreset(clone.presets, newValue);
+
+        this.setState(clone);
+        return;
+      }
+    }
+  }, {
+    key: 'setState',
+    value: function setState(state) {
+      this.state = state;
+      // console.info('State changed:', state)
+      this.render();
+    }
+
+    /*
+      Handler wrapper for UI events originating in this Custom Element.
+    */
+
+  }, {
+    key: 'handleEvent',
+    value: function handleEvent(e) {
+      var _this2 = this;
+
+      // console.log(e.type, e.target)
+
+      // Group events by type and map them by target element ID to handler functions
+      var handlers = {
+        "change": {
+          "use-preset": this.changePreset,
+          "replace-preset": this.definePreset
+        },
+        "click": {
+          "action-show-preset-form": this.togglePresetForm,
+          "action-cancel-save-preset": [this.togglePresetForm, this.resetSelectedPreset]
+        }
+
+        // Get any callbacks associated with the event type and element ID
+      };var cb = handlers[e.type][e.target.id];
+
+      // Wrap single callback to array; empty array if no callback found;
+      var cbArr = cb ? Array.isArray(cb) ? cb : [cb] : [];
+
+      // Run all callbacks for given event type and element ID
+      cbArr.map(function (cb) {
+        return cb.call(_this2, e);
+      });
+    }
+  }, {
+    key: 'markSelectedPreset',
+    value: function markSelectedPreset(presets, value) {
+      return presets.map(function (preset) {
+        preset.selected = preset.value === value;
+        return preset;
+      });
+    }
+  }, {
+    key: 'changePreset',
+    value: function changePreset(e) {
+      var detail = e.target.value;
+      this.dispatchEvent(new CustomEvent('presetchanged', { detail: detail }));
+    }
+  }, {
+    key: 'resetSelectedPreset',
+    value: function resetSelectedPreset() {
+      var clone = Object.assign({}, this.state);
+      // Mark the selected preset so the right `<option>` element gets selected on render.
+      clone.presets = this.markSelectedPreset(clone.presets, this.state.filter);
+      this.setState(clone);
+    }
+  }, {
+    key: 'togglePresetForm',
+    value: function togglePresetForm(e) {
+      e.preventDefault();
+
+      var clone = Object.assign({}, this.state);
+      clone.isFormVisible = !clone.isFormVisible;
+      this.setState(clone);
+    }
+  }, {
+    key: 'definePreset',
+    value: function definePreset(e) {
+      var clone = Object.assign({}, this.state);
+      var presetValue = '';
+
+      // If picking a preset from the dropdown, reset the text input
+      if (e.target.id === "replace-preset") {
+        clone.presetName = '';
+        presetValue = e.target.value;
+      }
+
+      // If defining a new preset name in the input, reset the dropdown
+      if (e.target.id === "new-preset") {
+        clone.presetName = e.target.value.trim();
+        presetValue = '';
+      }
+
+      // Mark the selected preset so the right `<option>` element gets selected on render.
+      clone.presets = this.markSelectedPreset(clone.presets, presetValue);
+
+      // If input is empty or the "None" preset is selected, the form can't be submitted.
+      clone.isFormValid = e.target.value.trim().length ? true : false;
+      this.setState(clone);
+    }
+  }, {
+    key: 'onSaveNewPreset',
+    value: function onSaveNewPreset(e) {
+      e.preventDefault();
+
+      // Prevent submit if somehow reached here with invalid form.
+      if (!this.state.isFormValid) {
+        return;
+      }
+
+      var clone = Object.assign({}, this.state);
+
+      // Create new preset with value of `this.state.filter`
+      if (this.state.presetName.length !== 0) {
+        clone.presets.push({
+          name: this.state.presetName,
+          value: this.state.filter
+        });
+      } else {
+        var index = clone.presets.findIndex(function (preset) {
+          return preset.selected === true;
+        });
+
+        if (index !== -1) {
+          clone.presets[index].value = this.state.filter;
+        }
+      }
+
+      // Mark the newly created or replaced filter as selected.
+      clone.presets = this.markSelectedPreset(clone.presets, this.state.filter);
+
+      clone.presetName = '';
+      clone.isFormValid = false;
+      clone.isFormVisible = false;
+
+      this.setState(clone);
+    }
+  }, {
+    key: 'connectedCallback',
+    value: function connectedCallback() {
+      this.render();
+    }
+  }], [{
+    key: 'observedAttributes',
     get: function get() {
-      return {
-        filterParamName: 'nflt', // name of search param for filters
-        filterContainerSelector: '#filterbox_wrap' // container for filters on search page
-      };
+      return ['value'];
     }
   }]);
 
-  return Booking;
-}();
+  return Presets;
+}(HyperHTMLElement);
 
-exports.default = Booking;
+// Define the new element
+
+
+customElements.define('bpt-presets', Presets);
+
+exports.default = Presets;
 
 /***/ }),
-/* 6 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1538,8 +1618,57 @@ try {
   module.exports = HyperHTMLElement;
   // if possible, also eventually require hyperHTML
   // and hoist it on the current scope
-  var hyperHTML = hyperHTML || __webpack_require__(4);
+  var hyperHTML = hyperHTML || __webpack_require__(0);
 } catch (o_O) {}
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Booking = function () {
+  function Booking() {
+    _classCallCheck(this, Booking);
+  }
+
+  _createClass(Booking, null, [{
+    key: 'getFiltersFromURL',
+    value: function getFiltersFromURL(url) {
+      var params = new URLSearchParams(url);
+      return params.get(this.config.filterParamName);
+    }
+  }, {
+    key: 'extendURLWithFilters',
+    value: function extendURLWithFilters(url, filters) {
+      var urlObj = new URL(url);
+      urlObj.searchParams.set(this.config.filterParamName, filters);
+
+      return '' + urlObj.origin + urlObj.pathname + '?' + urlObj.searchParams.toString();
+    }
+  }, {
+    key: 'config',
+    get: function get() {
+      return {
+        filterParamName: 'nflt', // name of search param for filters
+        filterContainerSelector: '#filterbox_wrap' // container for filters on search page
+      };
+    }
+  }]);
+
+  return Booking;
+}();
+
+exports.default = Booking;
 
 /***/ })
 /******/ ]);

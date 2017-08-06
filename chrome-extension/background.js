@@ -16,6 +16,4 @@ chrome.tabs.onUpdated.addListener(function(id, data, tab) {
   if (data.status === 'complete') {
     messagePort && messagePort.postMessage({ name: 'tabupdated', tab });
   }
-
-  console.log('tab updated', data, tab);
 })

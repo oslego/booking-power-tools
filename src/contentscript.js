@@ -1,13 +1,35 @@
-import BPTPresets from './components/presets.js';
+import Presets from './components/presets.js';
 import Booking from './booking.js';
 
-(function(host){
+(function(){
+  const host = document.querySelector(Booking.config.filterContainerSelector);
+
   if (!host){
-    console.warn(`Can't find host: ${Booking.config.filterContainerSelector}`)
+    console.warn(`Did not find host: ${Booking.config.filterContainerSelector}`);
     return;
   }
 
-  const presets = document.createElement('bpt-presets');
+  function onRuntimeMessage(message, sender, callback) {
+    const handlers = {
+      "tabupdated": onURLChange
+    }
+
+    try {
+      handlers[message.name].call(this, message)
+    } catch (err) {
+      // message unhandled
+      // console.warn(message, err)
+    }
+  }
+
+  function onURLChange(data) {
+    const url = new URL(data.tab.url)
+    presets.setAttribute('value', Booking.getFiltersFromURL(url.search));
+  }
+
+  const port = chrome.runtime.connect(chrome.runtime.id);
+  port.onMessage.addListener(onRuntimeMessage);
+
   const presetsData = [
     {
       name: 'Road trip',
@@ -19,14 +41,7 @@ import Booking from './booking.js';
     }
   ];
 
-  presets.setIntialState({presets: presetsData});
-  const nflt = Booking.getFiltersFromURL(window.location.search.toString());
-  if (nflt) {
-    presets.setAttribute('value', nflt)
-  } else {
-    presets.removeAttribute('value')
-  }
-  // presets.setAttribute('filter', Booking.getFiltersFromURL(window.location.search.toString()))
+  const presets = new Presets({presets: presetsData});
 
   presets.addEventListener('presetchanged', (e) => {
     const url = Booking.extendURLWithFilters(window.location.toString(), e.detail);
@@ -36,20 +51,18 @@ import Booking from './booking.js';
   presets.addEventListener('presetcreated', (e) => {});
   presets.addEventListener('presetdeleted', (e) => {});
 
-  const port = chrome.runtime.connect(chrome.runtime.id);
-  port.onMessage.addListener(
-    function(payload, sender, callback) {
-      presets.setAttribute('filters', Booking.getFiltersFromURL(window.location.toString()))
-    });
 
-  // Dev mode only. REMOVE BEFORE FLIGHT
-  window.addEventListener('beforeunload', async function(e){
-    chrome.runtime.sendMessage({ task: "restart" });
-  })
+  // presets.setIntialState({presets: presetsData});
+  presets.setAttribute('value', Booking.getFiltersFromURL(window.location.search.toString()));
 
   host.prepend(presets);
 
-})(document.querySelector(Booking.config.filterContainerSelector))
+  // Dev mode only. REMOVE BEFORE FLIGHT
+  window.addEventListener('beforeunload', function(e){
+    chrome.runtime.sendMessage({ task: "restart" });
+  })
+
+})()
 
 
 
