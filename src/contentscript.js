@@ -1,3 +1,4 @@
+import '../vendor/webcomponents-sd-ce.js';
 import Presets from './components/presets.js';
 import Booking from './booking.js';
 
@@ -63,8 +64,6 @@ import Booking from './booking.js';
   })
 
 })()
-
-
 
   // chrome.storage.sync.set({'foo': 'hello', 'bar': 'hi'}, function() {
   //   console.log('Settings saved');
