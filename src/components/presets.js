@@ -19,8 +19,6 @@ class Presets extends HyperHTMLElement {
 
     this.state =  Object.assign({}, defaultState, state)
 
-    console.log(this.state);
-
     // Create a shadow root
     this.shadow = this.attachShadow({mode: 'open'});
 

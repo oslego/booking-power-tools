@@ -1,4 +1,4 @@
-import '../vendor/webcomponents-sd-ce.js';
+import '../vendor/custom-elements.min.js';
 import Presets from './components/presets.js';
 import Booking from './booking.js';
 
