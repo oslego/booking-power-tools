@@ -8,7 +8,7 @@ class BPTPresets extends HyperHTMLElement {
     super();
 
     this.state = {
-      isFormVisible: true,
+      isFormVisible: false,
       isFormValid: false,
       filter: '',
       presetName: '',
@@ -219,6 +219,9 @@ class BPTPresets extends HyperHTMLElement {
     this.render();
   }
 
+  /*
+    Handler wrapper for UI events originating in this Custom Element.
+  */
   handleEvent(e) {
     // console.log(e.type, e.target)
 
@@ -230,21 +233,39 @@ class BPTPresets extends HyperHTMLElement {
       },
       "click": {
         "action-show-preset-form": this.togglePresetForm,
-        "action-cancel-save-preset": this.togglePresetForm
+        "action-cancel-save-preset": [this.togglePresetForm, this.resetSelectedPreset]
       }
     }
 
-    try {
-      handlers[e.type][e.target.id].call(this, e)
-    } catch (err){
-      // catch any errors because of non-existing handlers
-      // console.warn(err)
-    }
+    // Get any callbacks associated with the event type and element ID
+    const cb = handlers[e.type][e.target.id];
+
+    // Wrap single callback to array; empty array if no callback found;
+    const cbArr = cb
+      ? Array.isArray(cb) ? cb : [cb]
+      : [];
+
+    // Run all callbacks for given event type and element ID
+    cbArr.map(cb => cb.call(this, e));
+  }
+
+  markSelectedPreset(presets, value) {
+    return presets.map(preset => {
+      preset.selected = (preset.value === value);
+      return preset;
+    })
   }
 
   changePreset(e) {
     const detail = e.target.value;
     this.dispatchEvent(new CustomEvent('presetchanged', {detail}))
+  }
+
+  resetSelectedPreset() {
+    const clone = Object.assign({}, this.state);
+    // Mark the selected preset so the right `<option>` element gets selected on render.
+    clone.presets = this.markSelectedPreset(clone.presets, this.state.filter);
+    this.setState(clone);
   }
 
   togglePresetForm() {
