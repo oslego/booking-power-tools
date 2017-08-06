@@ -6,7 +6,7 @@
   "scripts": {
     "start": "concurrently \"npm run build\" \"npm run preview\"",
     "build": "webpack -w",
-    "preview": "serve --silent --open --cache 0",
+    "preview": "serve . --open --cache 0",
     "package": "zip -r chrome-extension.zip ./chrome-extension"
   },
   "author": "",
