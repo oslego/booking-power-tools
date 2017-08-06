@@ -125,20 +125,9 @@ class BPTPresets extends HyperHTMLElement {
    `;
 
    return this.html`<style>${css}</style><div class="presets">
-       <div id="container-use-preset" class="${this.state.isFormVisible ? 'u-hidden' : ''}">
-         <label for="use-preset">
-           Use saved filter preset:
-         </label>
-         <select name="preset" id="use-preset">
-           <option value="">None</option>${
-            // this.state.presets.map(preset => return OptionElement(preset))
-            this.state.presets.map(preset => {return `<option value="${preset.value}">${preset.name}</option>`})
-         }</select>
-       </div>
+       <div>${this.state.presets.length && this.UsePresetTemplate() }</div>
 
-       <a href="#" class="${this.state.isFormVisible ? 'u-hidden link' : 'link'}" id="action-show-preset-form">
-         Save selected filters as preset
-       </a>
+       <div>${this.state.filter && this.NewPresetPromptTemplate() }</div>
 
        <form id="container-new-preset" class="${this.state.isFormVisible ? '' : 'u-hidden'}" onsubmit="${this.onSaveNewPreset.bind(this)}">
          <label for="new-preset">
@@ -166,6 +155,25 @@ class BPTPresets extends HyperHTMLElement {
        </form>
      </div>
    `;
+ }
+
+ NewPresetPromptTemplate() {
+   return hyperHTML.wire()`<a href="#" class="${this.state.isFormVisible ? 'u-hidden link' : 'link'}" id="action-show-preset-form">
+     Save selected filters as preset
+   </a>`;
+ }
+
+ UsePresetTemplate() {
+  return hyperHTML.wire()`<div id="container-use-preset" class="${this.state.isFormVisible ? 'u-hidden' : ''}">
+    <label for="use-preset">
+      Use saved filter preset:
+    </label>
+    <select name="preset" id="use-preset">
+      <option value="">None</option>${
+       // this.state.presets.map(preset => return OptionElement(preset))
+       this.state.presets.map(preset => {return `<option value="${preset.value}" ${preset.selected ? 'selected' : ''}>${preset.name}</option>`})
+    }</select>
+  </div>`;
  }
 
  ReplacePresetTemplate() {
