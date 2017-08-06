@@ -7,8 +7,6 @@ class Presets extends HyperHTMLElement {
     // Always call super first in constructor
     super();
 
-
-
     const defaultState = {
       isFormVisible: false,
       isFormValid: false,
@@ -17,6 +15,7 @@ class Presets extends HyperHTMLElement {
       presets: []
     };
 
+    // Define initial state by merging the default with anything passed in
     this.state =  Object.assign({}, defaultState, state)
 
     // Create a shadow root
@@ -304,7 +303,7 @@ class Presets extends HyperHTMLElement {
 
   changePreset(e) {
     const detail = e.target.value;
-    this.dispatchEvent(new CustomEvent('presetchanged', {detail}))
+    this.dispatchEvent(new CustomEvent('presetselected', {detail}))
   }
 
   resetSelectedPreset() {
@@ -378,6 +377,8 @@ class Presets extends HyperHTMLElement {
     clone.presetName = ''
     clone.isFormValid = false;
     clone.isFormVisible = false;
+
+    this.dispatchEvent(new CustomEvent('presetlistupdated', {detail: clone.presets }))
 
     this.setState(clone);
   }
