@@ -1,5 +1,6 @@
 import '../vendor/custom-elements.min.js';
 import Presets from './components/presets.js';
+import Storage from './Storage.js';
 import Booking from './booking.js';
 
 (function(){
@@ -12,7 +13,7 @@ import Booking from './booking.js';
 
   function onRuntimeMessage(message, sender, callback) {
     const handlers = {
-      "tabupdated": onURLChange
+      "tabupdated": function() { window.dispatchEvent(new CustomEvent('locationchange', {detail: message.tab.url }))}
     }
 
     try {
@@ -23,40 +24,52 @@ import Booking from './booking.js';
     }
   }
 
-  function onURLChange(data) {
-    const url = new URL(data.tab.url)
-    presets.setAttribute('value', Booking.getFiltersFromURL(url.search));
-  }
-
   const port = chrome.runtime.connect(chrome.runtime.id);
   port.onMessage.addListener(onRuntimeMessage);
 
-  const presetsData = [
-    {
-      name: 'Road trip',
-      value: 'review_score=80;hotelfacility=2;'
-    },
-    {
-      name: 'Business trip',
-      value: 'review_score=80;hotelfacility=107;hr_24=8;'
-    }
-  ];
+  // const presetsData = [
+  //   {
+  //     name: 'Road trip',
+  //     value: 'review_score=80;hotelfacility=2;'
+  //   },
+  //   {
+  //     name: 'Business trip',
+  //     value: 'review_score=80;hotelfacility=107;hr_24=8;'
+  //   }
+  // ];
 
-  const presets = new Presets({presets: presetsData});
+  Storage.get(['presets'])
+    .then(data => {
+      console.log('got!', data);
+      return new Presets(data);
+    })
+    .catch(err => {
+      console.warn(err)
+      return new Presets();
+    })
+    // extra .then() after .catch() instead of unsupported .finally()
+    // presetsEl is the Presets DOM element instance
+    .then(presetsEl => {
+      console.log(presetsEl)
 
-  presets.addEventListener('presetchanged', (e) => {
-    const url = Booking.extendURLWithFilters(window.location.toString(), e.detail);
-    window.location = url;
-  });
+      presetsEl.addEventListener('presetselected', (e) => {
+        const url = Booking.extendURLWithFilters(window.location.toString(), e.detail);
+        window.location = url;
+      });
 
-  presets.addEventListener('presetcreated', (e) => {});
-  presets.addEventListener('presetdeleted', (e) => {});
+      presetsEl.addEventListener('presetlistupdated', (e) => {
+        Storage.set({presets: e.detail}).then(data => { console.log('stored!'); console.log(data) });
+      });
 
+      presetsEl.setAttribute('value', Booking.getFiltersFromURL(window.location.search.toString()));
 
-  // presets.setIntialState({presets: presetsData});
-  presets.setAttribute('value', Booking.getFiltersFromURL(window.location.search.toString()));
+      window.addEventListener('locationchange', e => {
+        presetsEl.setAttribute('value', Booking.getFiltersFromURL( new URL(e.detail.url).search ));
+      })
 
-  host.prepend(presets);
+      // Inject into to the page
+      host.prepend(presetsEl);
+    });
 
   // Dev mode only. REMOVE BEFORE FLIGHT
   window.addEventListener('beforeunload', function(e){
@@ -65,6 +78,4 @@ import Booking from './booking.js';
 
 })()
 
-  // chrome.storage.sync.set({'foo': 'hello', 'bar': 'hi'}, function() {
-  //   console.log('Settings saved');
-  // });
+})();
