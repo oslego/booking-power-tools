@@ -20,7 +20,13 @@ import Booking from './booking.js';
   ];
 
   presets.setIntialState({presets: presetsData});
-  presets.setAttribute('current', Booking.getFiltersFromURL(window.location.toString()))
+  const nflt = Booking.getFiltersFromURL(window.location.search.toString());
+  if (nflt) {
+    presets.setAttribute('value', nflt)
+  } else {
+    presets.removeAttribute('value')
+  }
+  // presets.setAttribute('filter', Booking.getFiltersFromURL(window.location.search.toString()))
 
   presets.addEventListener('presetchanged', (e) => {
     const url = Booking.extendURLWithFilters(window.location.toString(), e.detail);

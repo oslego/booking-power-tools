@@ -191,14 +191,19 @@ class BPTPresets extends HyperHTMLElement {
  }
 
   // Monitor the attributes for changes.
-  static get observedAttributes() { return ['filter']; }
+  static get observedAttributes() { return ['value']; }
 
   // Respond to attribute changes.
   attributeChangedCallback(attr, oldValue, newValue) {
-    if (attr == 'filter') {
+    if (attr == 'value') {
+      // console.log('value:', newValue, typeof newValue)
       const clone = Object.assign({}, this.state);
+      // Define the current filter as the `value` attribute value.
       clone.filter = newValue;
-      this.setState(clone)
+      // Mark as selected any preset whose value matches the `value` attribute value.
+      clone.presets = this.markSelectedPreset(clone.presets, newValue);
+
+      this.setState(clone);
       return;
     }
   }
@@ -265,10 +270,7 @@ class BPTPresets extends HyperHTMLElement {
     }
 
     // Mark the selected preset so the right `<option>` element gets selected on render.
-    clone.presets = clone.presets.map(preset => {
-      preset.selected = (preset.value === presetValue);
-      return preset;
-    })
+    clone.presets = this.markSelectedPreset(clone.presets, presetValue);
 
     // If input is empty or the "None" preset is selected, the form can't be submitted.
     clone.isFormValid = e.target.value.trim().length ? true : false;
