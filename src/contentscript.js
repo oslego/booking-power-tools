@@ -1,7 +1,7 @@
 import '../vendor/custom-elements.min.js';
 import Presets from './components/presets.js';
 import Storage from './Storage.js';
-import Booking from './booking.js';
+import Booking from './Booking.js';
 import StorageInspector from './StorageInspector';
 
 (function(){
@@ -41,7 +41,6 @@ import StorageInspector from './StorageInspector';
 
   Storage.get(['presets'])
     .then(data => {
-      console.log('got!', data);
       return new Presets(data);
     })
     .catch(err => {
@@ -51,7 +50,6 @@ import StorageInspector from './StorageInspector';
     // extra .then() after .catch() instead of unsupported .finally()
     // presetsEl is the Presets DOM element instance
     .then(presetsEl => {
-      console.log(presetsEl)
 
       presetsEl.addEventListener('presetselected', (e) => {
         const url = Booking.extendURLWithFilters(window.location.toString(), e.detail);
@@ -59,7 +57,7 @@ import StorageInspector from './StorageInspector';
       });
 
       presetsEl.addEventListener('presetlistupdated', (e) => {
-        Storage.set({presets: e.detail}).then(data => { console.log('stored!'); console.log(data) });
+        Storage.set({presets: e.detail});
       });
 
       presetsEl.setAttribute('value', Booking.getFiltersFromURL(window.location.search.toString()));
