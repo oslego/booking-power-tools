@@ -66,8 +66,30 @@ import StorageInspector from './StorageInspector';
         presetsEl.setAttribute('value', Booking.getFiltersFromURL( new URL(e.detail).search ));
       })
 
-      // Inject into to the page
+      // Inject Presets element into to the page
       host.prepend(presetsEl);
+
+      /*
+      IMPORTANT:
+
+      Booking.com uses a capture phase keydown event handler on <body>
+      to move focus inside the hotel search input field if document.activeElement
+      is not of tagName INPUT, TEXTAREA, or SELECT.
+
+      ShadowDOM eats focus of any nested input and causes document.activeElement
+      to be our Presets custom element, thus failing the Booking.com check for tagName.
+      @see https://medium.com/dev-channel/focus-inside-shadow-dom-78e8a575b73
+
+      To counter act this we one-up the Booking.com capture event handler
+      and prevent the keydown event from reaching it if the target is our Presets custom element.
+
+      Yes, it's a "Trace Buster Buster" situation https://www.youtube.com/watch?v=Iw3G80bplTg
+      */
+      document.body.addEventListener('keydown', e => {
+        if (e.target === presetsEl) {
+          e.stopImmediatePropagation();
+        }
+      }, { useCapture:true });
     });
 
   // Dev mode only. REMOVE BEFORE FLIGHT
@@ -77,5 +99,4 @@ import StorageInspector from './StorageInspector';
 
   // Dev mode only. REMOVE BEFORE FLIGHT
   document.body.appendChild(new StorageInspector())
-
 })();
