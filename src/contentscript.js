@@ -63,7 +63,7 @@ import StorageInspector from './StorageInspector';
       presetsEl.setAttribute('value', Booking.getFiltersFromURL(window.location.search.toString()));
 
       window.addEventListener('locationchange', e => {
-        presetsEl.setAttribute('value', Booking.getFiltersFromURL( new URL(e.detail.url).search ));
+        presetsEl.setAttribute('value', Booking.getFiltersFromURL( new URL(e.detail).search ));
       })
 
       // Inject into to the page
