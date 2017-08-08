@@ -245,8 +245,6 @@ class Presets extends HyperHTMLElement {
     newValue = (newValue === "undefined") ? null : newValue;
 
     if (attr == 'value') {
-      // console.warn('value:', newValue, typeof newValue)
-
       const clone = Object.assign({}, this.state);
       // Define the current filter as the `value` attribute value.
       clone.filter = newValue;
@@ -260,7 +258,6 @@ class Presets extends HyperHTMLElement {
 
   setState(state) {
     this.state = state;
-    // console.info('State changed:', state)
     this.render();
   }
 
@@ -268,8 +265,6 @@ class Presets extends HyperHTMLElement {
     Handler wrapper for UI events originating in this Custom Element.
   */
   handleEvent(e) {
-    // console.log(e.type, e.target)
-
     // Group events by type and map them by target element ID to handler functions
     const handlers = {
       "change": {

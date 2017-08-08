@@ -27,17 +27,6 @@ import Booking from './Booking.js';
   const port = chrome.runtime.connect(chrome.runtime.id);
   port.onMessage.addListener(onRuntimeMessage);
 
-  // const presetsData = [
-  //   {
-  //     name: 'Road trip',
-  //     value: 'review_score=80;hotelfacility=2;'
-  //   },
-  //   {
-  //     name: 'Business trip',
-  //     value: 'review_score=80;hotelfacility=107;hr_24=8;'
-  //   }
-  // ];
-
   Storage.get(['presets'])
     .then(data => {
       return new Presets(data);
@@ -79,7 +68,7 @@ import Booking from './Booking.js';
       to be our Presets custom element, thus failing the Booking.com check for tagName.
       @see https://medium.com/dev-channel/focus-inside-shadow-dom-78e8a575b73
 
-      To counter act this we one-up the Booking.com capture event handler
+      To counteract this we one-up the Booking.com capture event handler
       and prevent the keydown event from reaching it if the target is our Presets custom element.
 
       Yes, it's a "Trace Buster Buster" situation https://www.youtube.com/watch?v=Iw3G80bplTg
