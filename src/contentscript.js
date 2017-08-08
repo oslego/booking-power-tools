@@ -2,7 +2,6 @@ import '../vendor/custom-elements.min.js';
 import Presets from './components/Presets.js';
 import Storage from './Storage.js';
 import Booking from './Booking.js';
-import StorageInspector from './StorageInspector';
 
 (function(){
   const host = document.querySelector(Booking.config.filterContainerSelector);
@@ -92,11 +91,16 @@ import StorageInspector from './StorageInspector';
       }, { useCapture:true });
     });
 
-  // Dev mode only. REMOVE BEFORE FLIGHT
-  window.addEventListener('beforeunload', function(e){
-    chrome.runtime.sendMessage({ task: "restart" });
-  })
+  // The following snippet is removed automatically from production builds.
+  if(DEV_MODE) {
+    console.log('Development mode ON');
 
-  // Dev mode only. REMOVE BEFORE FLIGHT
-  document.body.appendChild(new StorageInspector())
+    window.addEventListener('beforeunload', function(e){
+      chrome.runtime.sendMessage({ task: "restart" });
+    });
+
+    const StorageInspector = require('./StorageInspector');
+    document.body.appendChild(new StorageInspector.default())
+  }
+
 })();
