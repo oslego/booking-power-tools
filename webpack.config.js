@@ -1,29 +1,8 @@
-const path = require('path');
-const webpack = require('webpack');
-const UglifyJSWebpackPlugin = require('uglifyjs-webpack-plugin');
+const commonConfig = require('./webpack.common');
+const webpackMerge = require('webpack-merge');
 
-const javascript = {
-  test: /\.(js)$/,
-  use: [{
-    loader: 'babel-loader',
-    options: { presets: ['es2015'] }
-  }]
-};
-
-const config = {
-  entry: {
-    contentscript: './src/contentscript.js' // webpack starts dependecy tree from here
-  },
-  output: {
-    path: path.resolve(__dirname, 'chrome-extension'),
-    filename: '[name].js'
-  },
-  module: {
-    rules: [ javascript ]
-  },
-  plugins: [
-    // new UglifyJSWebpackPlugin({sourceMap: true}),
-  ]
-};
-
-module.exports = config;
+module.exports = (env) => {
+  console.log(env);
+  const envConfig = require(`./webpack.${env.env}.js`);
+  return webpackMerge(commonConfig, envConfig);
+}

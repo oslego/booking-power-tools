@@ -4,8 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run build\" \"npm run preview\"",
-    "build": "webpack -w",
+    "start": "concurrently \"npm run build:dev:watch\" \"npm run preview\"",
+
+    "build:dev:watch": "npm run build:dev -- --watch",
+    "build:prod:watch": "npm run build:prod -- --watch",
+
+    "build:dev": "npm run build -- --env.env=dev",
+    "build:prod": "npm run build -- --env.env=prod",
+
+    "build": "webpack",
+
     "preview": "serve . --open --cache 0",
     "package": "zip -r chrome-extension.zip ./chrome-extension"
   },
@@ -18,7 +26,8 @@
     "concurrently": "^3.5.0",
     "serve": "^6.0.3",
     "uglifyjs-webpack-plugin": "^1.0.0-beta.2",
-    "webpack": "^3.4.1"
+    "webpack": "^3.4.1",
+    "webpack-merge": "^4.1.0"
   },
   "dependencies": {
     "hyperhtml": "^0.17.4",
