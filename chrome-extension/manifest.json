@@ -3,7 +3,7 @@
 
   "name": "Booking.com Search Power Tools",
   "description": "Augments Booking.com with extra tools to search, filter and display hotel results.",
-  "version": "1.0",
+  "version": "1.1",
   "background": {
     "scripts": ["background.js"],
     "persistent": false
