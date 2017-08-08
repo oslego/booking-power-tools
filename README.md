@@ -36,6 +36,12 @@ git clone git@github.com:oslego/chrome-booking-power-tools.git
 - browse to the cloned repository
 - choose the `chrome-extension` folder and press _Select_
 
+## Credits
+- [Power Drill icon](https://thenounproject.com/term/power-drill/255040/) by [Ariel Okhtenberg](https://thenounproject.com/aokhtenberg/) from the Noun Project
+- [hyperHTML](https://github.com/WebReflection/hyperHTML) by [WebReflection](https://github.com/WebReflection)
+- [hyperHTML-Element](https://github.com/WebReflection/hyperHTML-Element) by [WebReflection](https://github.com/WebReflection)
+- [Custom Elements polyfill](https://github.com/webcomponents/custom-elements/) by [The Polymer Authors](https://github.com/webcomponents)
+
 ## LICENSE
 
 Everything in this repository is BSD style license unless otherwise specified.
