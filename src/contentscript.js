@@ -1,5 +1,5 @@
 import '../vendor/custom-elements.min.js';
-import Presets from './components/presets.js';
+import Presets from './components/Presets.js';
 import Storage from './Storage.js';
 import Booking from './Booking.js';
 import StorageInspector from './StorageInspector';
