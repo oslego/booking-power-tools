@@ -15,7 +15,7 @@
         "*://www.booking.com/searchresults*"
       ],
       "js": [
-        null
+        "contentscript.js"
       ]
     }
   ],

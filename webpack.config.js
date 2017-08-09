@@ -36,9 +36,10 @@ module.exports = (env) => {
     : [ globalVariablesPlugin, chromeExtensionPlugin, uglifyJSPlugin ];
 
   const config = {
+    context: path.resolve(__dirname, './src'),
     entry: {
-      contentscript: './src/contentscript.js',
-      background: './src/background.js',
+      contentscript: './contentscript.js',
+      background: './background.js',
     },
     output: {
       path: path.resolve(__dirname, 'chrome-extension'),
