@@ -1,22 +1,16 @@
 {
   "manifest_version": 2,
+
   "name": "Booking.com Power Tools",
   "description": "Augments Booking.com with extra tools to search, filter and display hotel results.",
   "background": {
-    "scripts": [
-      "background.js"
-    ],
+    "scripts": ["background.js"],
     "persistent": false
   },
   "content_scripts": [
     {
-      "matches": [
-        "*://localhost/*",
-        "*://www.booking.com/searchresults*"
-      ],
-      "js": [
-        null
-      ]
+      "matches": ["*://localhost/*", "*://www.booking.com/searchresults*"],
+      "js": ["contentscript.js"]
     }
   ],
   "permissions": [
@@ -28,6 +22,5 @@
     "48": "icons/48.png",
     "64": "icons/64.png",
     "128": "icons/128.png"
-  },
-  "version": "1.1.0"
+  }
 }

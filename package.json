@@ -1,19 +1,14 @@
 {
   "name": "chrome-booking-power-tools",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.1.0",
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run build:dev:watch\" \"npm run preview\"",
-
     "build:dev:watch": "npm run build:dev -- --watch",
     "build:prod:watch": "npm run build:prod -- --watch",
-
     "build:dev": "npm run build -- --env.env=dev",
     "build:prod": "npm run build -- --env.env=prod",
-
     "build": "webpack",
-
     "preview": "serve . --open --cache 0",
     "package": "zip -r chrome-extension.zip ./chrome-extension"
   },
@@ -23,6 +18,7 @@
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-preset-es2015": "^6.24.1",
+    "chrome-dev-webpack-plugin": "^0.3.3",
     "concurrently": "^3.5.0",
     "serve": "^6.0.3",
     "uglifyjs-webpack-plugin": "^1.0.0-beta.2",
