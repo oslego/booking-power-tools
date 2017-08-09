@@ -20,7 +20,7 @@ Search around a date for better deals.
 
 ### From the Chrome Web Store
 
-Find the Booking.com Power Tools extension and click the button labeled _Add to Chrome_.
+Find the [Booking.com Power Tools](https://chrome.google.com/webstore/detail/bookingcom-power-tools/comfbhfcjlceceneaieekeljnkdkkpgo) extension and click the button labeled _Add to Chrome_.
 
 ### From source
 
