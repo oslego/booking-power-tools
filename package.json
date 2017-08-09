@@ -10,6 +10,7 @@
     "build:prod": "npm run build -- --env.env=prod",
     "build": "webpack",
     "preview": "serve . --open --cache 0",
+    "postversion": "npm run package",
     "package": "zip -r chrome-extension.zip ./chrome-extension"
   },
   "author": "",
