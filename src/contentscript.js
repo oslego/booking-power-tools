@@ -40,6 +40,7 @@ import Booking from './Booking.js';
     .then(presetsEl => {
 
       presetsEl.addEventListener('presetselected', (e) => {
+        presetsEl.setAttribute('in-progress', true);
         const url = Booking.extendURLWithFilters(window.location.toString(), e.detail);
         window.location = url;
       });

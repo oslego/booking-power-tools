@@ -37,9 +37,45 @@ class Presets extends HyperHTMLElement {
      }
 
      .presets {
-      //  padding: 7px;
        margin-bottom: 20px;
        font-size: 13px;
+       position: relative;
+     }
+
+     .presets.in-progress::before,
+     .presets.in-progress::after {
+       position: absolute;
+       display: block;
+       content: ' ';
+     }
+
+     .presets.in-progress::before{
+       background: rgba(255, 255, 255, 0.8);
+       width: 100%;
+       height: 100%;
+       z-index: 1;
+     }
+
+     .presets.in-progress::after {
+       top: 0;
+       bottom: 0;
+       left: 0;
+       right: 0;
+       margin: auto;
+       z-index: 2;
+       border-radius: 50%;
+       font-size: 10px;
+       width: 1em;
+       height: 1em;
+       display: inline-block;
+       background-color: #55af32;
+       text-indent: -9999em;
+       background-image: radial-gradient(circle, white 0, white 45%, transparent 45%);
+       background-origin: border-box;
+       border: .6em solid rgba(255, 255, 255, 0);
+       border-left: .6em solid white;
+       transform: translateZ(0);
+       animation: spin 1.1s infinite linear;
      }
 
      label {
@@ -145,6 +181,16 @@ class Presets extends HyperHTMLElement {
        line-height: 28px;
        font-weight: 500
      }
+
+     @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
    `;
 
    return this.html`<style>${css}</style><div class="presets">
@@ -234,7 +280,7 @@ class Presets extends HyperHTMLElement {
  }
 
   // Monitor the attributes for changes.
-  static get observedAttributes() { return ['value']; }
+  static get observedAttributes() { return ['value', 'in-progress']; }
 
   // Respond to attribute changes.
   attributeChangedCallback(attr, oldValue, newValue) {
@@ -244,7 +290,7 @@ class Presets extends HyperHTMLElement {
     newValue = (newValue === "null") ? null : newValue;
     newValue = (newValue === "undefined") ? null : newValue;
 
-    if (attr == 'value') {
+    if (attr === 'value') {
       const clone = Object.assign({}, this.state);
       // Define the current filter as the `value` attribute value.
       clone.filter = newValue;
@@ -253,6 +299,11 @@ class Presets extends HyperHTMLElement {
 
       this.setState(clone);
       return;
+    }
+
+    if (attr === 'in-progress') {
+      const value = (newValue === "true") ? true : false;
+      this.shadowRoot.querySelector('.presets').classList.toggle(attr, value)
     }
   }
 
@@ -297,6 +348,7 @@ class Presets extends HyperHTMLElement {
   }
 
   changePreset(e) {
+    e.target.blur();
     const detail = e.target.value;
     this.dispatchEvent(new CustomEvent('presetselected', {detail}))
   }
