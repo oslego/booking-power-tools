@@ -18,7 +18,7 @@ module.exports = (env) => {
 
   const chromeExtensionPlugin = new ChromeDevPlugin({
     //The source manifest file you want to use for your extension
-    entry: './src/manifest.json',
+    entry: isDev ? './src/manifest.dev.json' : './src/manifest.prod.json',
     package: './package.json',
     buildId: false,
   })
