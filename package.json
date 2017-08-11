@@ -27,7 +27,7 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "hyperhtml": "^0.17.4",
+    "hyperhtml": "WebReflection/hyperHTML#semver:^1.0",
     "hyperhtml-element": "^0.2.2"
   }
 }
