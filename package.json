@@ -1,6 +1,6 @@
 {
   "name": "chrome-booking-power-tools",
-  "version": "1.2.1",
+  "version": "1.2.0",
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run build:dev:watch\" \"npm run preview\"",
@@ -10,7 +10,7 @@
     "build:prod": "npm run build -- --env.env=prod",
     "build": "webpack",
     "preview": "serve . --open --cache 0",
-    "postversion": "npm run build:prod && npm run package",
+    "version": "npm run build:prod && git add -A chrome-extension && npm run package",
     "package": "zip -r chrome-extension.zip ./chrome-extension"
   },
   "author": "",
