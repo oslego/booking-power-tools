@@ -196,9 +196,9 @@ class Presets extends HyperHTMLElement {
    return this.html`<style>${css}</style><div class="presets">
        <h3>Filter presets</h3>
 
-       <div>${ (this.state.presets.length === 0) ? this.NoPresetsTemplate() : this.UsePresetTemplate() }</div>
+       ${ (this.state.presets.length === 0) ? this.NoPresetsTemplate() : this.UsePresetTemplate() }
 
-       <div>${ this.NewPresetPromptTemplate() }</div>
+       ${ this.NewPresetPromptTemplate() }
 
        <form id="container-new-preset" class="${this.state.isFormVisible ? '' : 'u-hidden'}" onsubmit="${this.onSaveNewPreset.bind(this)}">
          <label for="new-preset">
@@ -211,7 +211,7 @@ class Presets extends HyperHTMLElement {
            value="${this.state.presetName}"
            oninput="${this.definePreset.bind(this)}" />
 
-         <div>${this.ReplacePresetTemplate()}</div>
+         ${this.ReplacePresetTemplate()}
 
          <div class="actionlist actionlist--spaced">
            <a href="#" class="link link--quiet" id="action-cancel-save-preset">
@@ -254,10 +254,13 @@ class Presets extends HyperHTMLElement {
       Use preset:
     </label>
     <select name="preset" id="use-preset">
-      <option value="">None</option>${
-       // this.state.presets.map(preset => return OptionElement(preset))
-       this.state.presets.map(preset => {return `<option value="${preset.value}" ${preset.selected ? 'selected' : ''}>${preset.name}</option>`})
-    }</select>
+      <option value="">None</option>
+      ${
+       this.state.presets.map(preset => {
+         return `<option value="${preset.value}" ${preset.selected ? 'selected' : ''}>${preset.name}</option>`
+       })
+      }
+    </select>
   </div>`;
  }
 
@@ -273,9 +276,13 @@ class Presets extends HyperHTMLElement {
     </label>
 
     <select name="preset" id="replace-preset">
-      <option value="">None</option>${
-       this.state.presets.map(preset => {return `<option value="${preset.value}" ${preset.selected ? 'selected' : ''}>${preset.name}</option>`})
-    }</select>
+      <option value="">None</option>
+      ${
+       this.state.presets.map(preset => {
+         return `<option value="${preset.value}" ${preset.selected ? 'selected' : ''}>${preset.name}</option>`
+       })
+      }
+    </select>
   `;
  }
 
