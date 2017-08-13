@@ -30,7 +30,7 @@ Find the [Booking.com Power Tools](https://chrome.google.com/webstore/detail/boo
 git clone git@github.com:oslego/chrome-booking-power-tools.git
 ```
 
-- navigate to `chrome://extesions` in Google Chrome
+- navigate to `chrome://extensions` in Google Chrome
 - tick the checkbox labeled _Developer mode_
 - click _Load unpacked extension_
 - browse to the cloned repository
