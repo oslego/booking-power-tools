@@ -21,7 +21,7 @@
     "babel-preset-es2015": "^6.24.1",
     "chrome-dev-webpack-plugin": "^0.3.3",
     "concurrently": "^3.5.0",
-    "serve": "^6.0.3",
+    "serve": ">=7.0.0",
     "uglifyjs-webpack-plugin": "^1.0.0-beta.2",
     "webpack": "^3.4.1",
     "webpack-merge": "^4.1.0"
